@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_facebook/data/post.dart';
+import 'package:my_facebook/data/model/post.dart';
 import 'package:my_facebook/screens/home/profile_avatar.dart';
 
 class PostHeader extends StatelessWidget {

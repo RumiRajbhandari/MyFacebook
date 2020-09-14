@@ -12,7 +12,7 @@ class ProfileAvatar extends StatelessWidget {
       radius: 20,
       backgroundColor: main_background,
       backgroundImage: NetworkImage(
-          'https://raw.githubusercontent.com/RumiRajbhandari/NavigationComponentDemo/master/media/rara.png'),
+          'https://cdn.pixabay.com/photo/2015/09/02/13/24/girl-919048_1280.jpg'),
     );
   }
 }

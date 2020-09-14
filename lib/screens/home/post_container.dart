@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_facebook/data/post.dart';
+import 'package:my_facebook/data/model/post.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/post_header.dart';
 
@@ -24,7 +24,7 @@ class PostContainer extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(post.title),
+              child: Text(post.status),
             ),
             (post.imageList != null && post.imageList.length > 0)
                 ? _getImageBody(post.imageList)
@@ -49,7 +49,7 @@ class PostContainer extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                     image:
-                        DecorationImage(image: NetworkImage(imageList[index]), fit: BoxFit.fill)),
+                        DecorationImage(image: NetworkImage(imageList[index]), fit: BoxFit.cover)),
               ),
               Container(
                 color: Color.fromRGBO(0, 0, 0, 0.4),
