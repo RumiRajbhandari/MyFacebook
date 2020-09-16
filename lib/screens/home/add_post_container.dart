@@ -8,9 +8,9 @@ import 'package:my_facebook/view_model/posts_view_model.dart';
 import 'package:provider/provider.dart';
 
 class AddPostContainer extends StatelessWidget {
-  final void Function(Post post) onEdit;
+  final void Function(Post post) onAdd;
 
-  AddPostContainer({@required this.onEdit});
+  AddPostContainer({@required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,8 @@ class AddPostContainer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => AddPostScreen(
-                            onEdit: (post) {
-                              onEdit(post);
+                            onAdd: (post) {
+                              onAdd(post);
                             },
                           ),
                         ),

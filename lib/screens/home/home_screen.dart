@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_facebook/data/model/post.dart';
-import 'package:my_facebook/res/color.dart';
-
+import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/home/add_post_container.dart';
 import 'package:my_facebook/screens/home/post_container.dart';
 import 'package:my_facebook/utils/error_screen.dart';
@@ -21,6 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        title: Text(Strings.appTitle),
+        centerTitle: true,
+      ),
       body: ChangeNotifierProvider<PostViewModel>(
         create: (context) => viewModel..fetchHomeScreenData(),
         builder: (context, _) {
@@ -33,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ErrorScreen(viewModel.postDataUseCase.exception);
                 break;
               case ResponseState.COMPLETE:
+                print('on complete');
                 return _getProfileList(context, viewModel.postDataUseCase.data);
                 break;
             }
@@ -46,15 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getProfileList(BuildContext context, List<Post> posts) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          brightness: Brightness.light,
-          backgroundColor: main_background,
-          title: Text("My facebook", style: TextStyle(color: Colors.black)),
-          centerTitle: true,
-          floating: true,
-        ),
         SliverToBoxAdapter(child: AddPostContainer(
-          onEdit: (post) {
+          onAdd: (post) {
             final model = Provider.of<PostViewModel>(context, listen: false);
             final todo = model.addPost(post);
             return Navigator.pop(context);

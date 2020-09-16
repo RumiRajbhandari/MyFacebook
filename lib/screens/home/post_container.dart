@@ -3,15 +3,20 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my_facebook/data/model/image.dart';
 import 'package:my_facebook/data/model/post.dart';
 import 'package:my_facebook/res/color.dart';
+import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/post_header.dart';
 
-class PostContainer extends StatelessWidget {
+class PostContainer extends StatefulWidget {
   final Post post;
 
-  // todo rumi
   const PostContainer({Key key, this.post}) : super(key: key);
 
+  @override
+  _PostContainerState createState() => _PostContainerState();
+}
+
+class _PostContainerState extends State<PostContainer> {
   @override
   Widget build(BuildContext context) {
     return BgItem(
@@ -19,19 +24,27 @@ class PostContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PostHeader(post: post),
+            PostHeader(
+              post: widget.post,
+              onEdit: (Post updatedPost) {
+                widget.post.status = updatedPost.status;
+                widget.post.imageList = updatedPost.imageList;
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
             Container(
               height: 1,
               color: color_divider,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: (post.status != null && post.status.isNotEmpty)
-                  ? Text(post.status)
+              child: (widget.post.status != null && widget.post.status.isNotEmpty)
+                  ? Text(widget.post.status)
                   : SizedBox.shrink(),
             ),
-            (post.imageList != null && post.imageList.length > 0)
-                ? _getImageBody(context, post.imageList)
+            (widget.post.imageList != null && widget.post.imageList.length > 0)
+                ? _getImageBody(context, widget.post.imageList)
                 : const SizedBox.shrink()
           ],
         ));
@@ -73,18 +86,18 @@ class PostContainer extends StatelessWidget {
                   child: (image.path != null && image.path.isNotEmpty)
                       ? Image.network(image.path)
                       : AssetThumb(
-                    asset: image.asset,
-                    width: 300,
-                    height: 300,
-                    spinner: Container(),
-                  ),
+                          asset: image.asset,
+                          width: 300,
+                          height: 300,
+                          spinner: Container(),
+                        ),
                 ),
                 Container(
                   color: Color.fromRGBO(0, 0, 0, 0.4),
                 ),
                 Center(
                   child: Text(
-                    'More',
+                    Strings.more,
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                   ),
                 )
@@ -94,11 +107,11 @@ class PostContainer extends StatelessWidget {
             return FittedBox(
               child: (image.asset != null)
                   ? AssetThumb(
-                asset: image.asset,
-                width: 300,
-                height: 300,
-                spinner: Container(),
-              )
+                      asset: image.asset,
+                      width: 300,
+                      height: 300,
+                      spinner: Container(),
+                    )
                   : Image.network(image.path),
               fit: BoxFit.fill,
             );

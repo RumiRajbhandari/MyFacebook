@@ -27,6 +27,7 @@ dependencies:
   get_it: ^3.0.1
   provider: ^4.0.1
   multi_image_picker: ^4.7.13
+  toast: ^0.1.5
 
 
   # The following adds the Cupertino Icons font to your application.

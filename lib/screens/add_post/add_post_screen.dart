@@ -11,9 +11,9 @@ import 'package:my_facebook/screens/home/profile_avatar.dart';
 import 'package:my_facebook/view_model/posts_view_model.dart';
 
 class AddPostScreen extends StatefulWidget {
-  final void Function(Post post) onEdit;
+  final void Function(Post post) onAdd;
 
-  AddPostScreen({@required this.onEdit});
+  AddPostScreen({@required this.onAdd});
 
   @override
   _AddPostScreenState createState() => _AddPostScreenState();
@@ -27,8 +27,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Future getImage() async {
     try {
       images = await MultiImagePicker.pickImages(maxImages: 10, enableCamera: true);
-      var image = images[0];
-      print('images name is ${image.name} ${image.identifier} $image');
       setState(() {});
     } catch (e) {
       print(e);
@@ -39,8 +37,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: main_background,
-          title: Text(Strings.addNewPost, style: TextStyle(color: Colors.black)),
+          backgroundColor: Colors.blueAccent,
+          title: Text(Strings.addNewPost),
           centerTitle: true,
         ),
         body: Container(
@@ -70,7 +68,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
               _getGridView(),
               _getButtons()
-
             ],
           ),
         ));
@@ -94,7 +91,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           );
   }
 
-  Widget _getButtons(){
+  Widget _getButtons() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -103,8 +100,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           FlatButton(
             color: color_accent,
             child: Text(Strings.pickImages,
-                style:
-                TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
+                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
             onPressed: () {
               getImage();
             },
@@ -112,11 +108,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
           FlatButton(
             color: color_accent,
             child: Text(Strings.post,
-                style:
-                TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
+                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
             onPressed: () {
               var post = Post(id: 0, status: status, imageList: _getImageList());
-              widget.onEdit(post);
+              widget.onAdd(post);
             },
           )
         ],
