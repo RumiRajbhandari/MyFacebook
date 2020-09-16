@@ -41,6 +41,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   void addPost(Post post) {
+    print('added post is ${post.imageList}');
     postList.insert(0, post);
     _setPostsDataUseCase(Response.complete<List<Post>>(postList));
     print('add post ----- ${postList.length}');

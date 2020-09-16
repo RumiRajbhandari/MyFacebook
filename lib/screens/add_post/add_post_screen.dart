@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my_facebook/data/model/image.dart';
 import 'package:my_facebook/data/model/post.dart';
 import 'package:my_facebook/res/color.dart';
+import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/profile_avatar.dart';
 import 'package:my_facebook/view_model/posts_view_model.dart';
@@ -24,6 +27,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Future getImage() async {
     try {
       images = await MultiImagePicker.pickImages(maxImages: 10, enableCamera: true);
+      var image = images[0];
+      print('images name is ${image.name} ${image.identifier} $image');
       setState(() {});
     } catch (e) {
       print(e);
@@ -35,7 +40,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: main_background,
-          title: Text("Add a new post", style: TextStyle(color: Colors.black)),
+          title: Text(Strings.addNewPost, style: TextStyle(color: Colors.black)),
           centerTitle: true,
         ),
         body: Container(
@@ -60,36 +65,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     status = value;
                   },
                   decoration: InputDecoration.collapsed(
-                      hintText: 'What\'s on your mind?', hintStyle: TextStyle(fontSize: 16)),
+                      hintText: Strings.whatsonYourMind, hintStyle: TextStyle(fontSize: 16)),
                 ),
               ),
               _getGridView(),
-              FlatButton(
-                color: color_accent,
-                child: Text('Pick Images',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
-                onPressed: () {
-                  getImage();
-                },
-              ),
-              FlatButton(
-                color: color_accent,
-                child: Text('Post',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
-                onPressed: () {
-                  var post = Post(id: 0, status: status, imageList: _getImageList());
-                  widget.onEdit(post);
-                },
-              )
+              _getButtons()
+
             ],
           ),
         ));
   }
 
   Widget _getGridView() {
-    return (images == null)
+    return (images == null || images.length < 1)
         ? SizedBox.shrink()
         : GridView.count(
             shrinkWrap: true,
@@ -100,12 +88,46 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 asset: asset,
                 width: 300,
                 height: 300,
+                spinner: Container(),
               );
             }),
           );
   }
 
+  Widget _getButtons(){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          FlatButton(
+            color: color_accent,
+            child: Text(Strings.pickImages,
+                style:
+                TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
+            onPressed: () {
+              getImage();
+            },
+          ),
+          FlatButton(
+            color: color_accent,
+            child: Text(Strings.post,
+                style:
+                TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
+            onPressed: () {
+              var post = Post(id: 0, status: status, imageList: _getImageList());
+              widget.onEdit(post);
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   List<ImageModel> _getImageList() {
-    images.map((image) => ImageModel(path: image.name, isSynced: false));
+    return images
+        .map(
+            (image) => ImageModel(asset: image, isSynced: false, file: File("${image.identifier}")))
+        .toList();
   }
 }

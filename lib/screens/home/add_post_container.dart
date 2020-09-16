@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_facebook/data/model/post.dart';
+import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/add_post/add_post_screen.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/profile_avatar.dart';
@@ -22,28 +23,26 @@ class AddPostContainer extends StatelessWidget {
             child: Row(
               children: [
                 ProfileAvatar(),
-                const SizedBox(
-                  width: 8,
-                ),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: BgItem(
-                    margin: EdgeInsets.all(12),
-                    padding: EdgeInsets.all(8),
-                    child: TextField(
-                      decoration: InputDecoration.collapsed(hintText: 'What\'s on your mind?'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddPostScreen(
-                              onEdit: (post) {
-                                onEdit(post);
-                              },
-                            ),
-                          ),
-                        );
-                      },
+                  child: GestureDetector(
+                    child: BgItem(
+                      margin: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(8),
+                      child: Text(Strings.whatsonYourMind),
                     ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddPostScreen(
+                            onEdit: (post) {
+                              onEdit(post);
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 )
               ],
