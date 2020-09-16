@@ -15,7 +15,7 @@ class PostHeader extends StatelessWidget {
         children: [
           ProfileAvatar(),
           const SizedBox(
-            width: 8,
+            width: 12,
           ),
           Expanded(child: Text('Rumi Rajbhandari')),
           IconButton(

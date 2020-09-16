@@ -14,7 +14,7 @@ class BgItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Card(
-          color: main_background,
+          color: white,
           shape: RoundedRectangleBorder(
             side: BorderSide(color: Colors.black12, width: 1),
             borderRadius: BorderRadius.circular(8),

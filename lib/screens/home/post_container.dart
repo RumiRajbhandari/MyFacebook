@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_facebook/data/model/image.dart';
 import 'package:my_facebook/data/model/post.dart';
+import 'package:my_facebook/res/color.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/post_header.dart';
 
@@ -17,10 +19,9 @@ class PostContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             PostHeader(post: post),
-            //todo rumi
             Container(
               height: 1,
-              color: Colors.black,
+              color: color_divider,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -33,11 +34,11 @@ class PostContainer extends StatelessWidget {
         ));
   }
 
-  Widget _getImageBody(List<String> imageList) {
-    return (imageList.length > 1) ? _getGridView(imageList) : Image.network(imageList[0]);
+  Widget _getImageBody(List<ImageModel> imageList) {
+    return (imageList.length > 1) ? _getGridView(imageList) : Image.network(imageList[0].path);
   }
 
-  Widget _getGridView(List<String> imageList) {
+  Widget _getGridView(List<ImageModel> imageList) {
     return GridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -48,8 +49,8 @@ class PostContainer extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    image:
-                        DecorationImage(image: NetworkImage(imageList[index]), fit: BoxFit.cover)),
+                    image: DecorationImage(
+                        image: NetworkImage(imageList[index].path), fit: BoxFit.cover)),
               ),
               Container(
                 color: Color.fromRGBO(0, 0, 0, 0.4),
@@ -64,7 +65,7 @@ class PostContainer extends StatelessWidget {
           );
         } else {
           return FittedBox(
-            child: Image.network(imageList[index]),
+            child: Image.network(imageList[index].path),
             fit: BoxFit.fill,
           );
         }
