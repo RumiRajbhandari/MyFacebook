@@ -8,4 +8,6 @@ class Strings {
   static const String editPost = 'Edit post';
   static const String update = 'Update';
   static const String pleaseEditPostBeforeUpdating = 'Please edit post before updating';
+  static const String pleaseAddStatusOrImagesBeforePosting =
+      'Please add status or images before posting';
 }

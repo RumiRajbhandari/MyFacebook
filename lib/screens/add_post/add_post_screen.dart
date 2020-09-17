@@ -9,6 +9,7 @@ import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/profile_avatar.dart';
 import 'package:my_facebook/view_model/posts_view_model.dart';
+import 'package:toast/toast.dart';
 
 class AddPostScreen extends StatefulWidget {
   final void Function(Post post) onAdd;
@@ -110,8 +111,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
             child: Text(Strings.post,
                 style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
             onPressed: () {
-              var post = Post(id: 0, status: status, imageList: _getImageList());
-              widget.onAdd(post);
+              if(status.isEmpty && images.length<1){
+                Toast.show(Strings.pleaseAddStatusOrImagesBeforePosting, context);
+              }else{
+                var post = Post(id: 0, status: status, imageList: _getImageList());
+                widget.onAdd(post);
+              }
             },
           )
         ],
