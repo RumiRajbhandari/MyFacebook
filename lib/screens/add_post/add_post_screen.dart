@@ -8,7 +8,6 @@ import 'package:my_facebook/res/color.dart';
 import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/profile_avatar.dart';
-import 'package:my_facebook/view_model/posts_view_model.dart';
 import 'package:toast/toast.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -22,7 +21,7 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   List<Asset> images = List<Asset>();
-  final PostViewModel viewModel = PostViewModel();
+
   String status = "";
 
   Future getImage() async {
@@ -43,53 +42,51 @@ class _AddPostScreenState extends State<AddPostScreen> {
           centerTitle: true,
         ),
         body: Container(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  ProfileAvatar(),
-                  const SizedBox(
-                    width: 12,
+            padding: EdgeInsets.all(12),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: [
+                      ProfileAvatar(),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Expanded(child: Text('Rumi Rajbhandari')),
+                    ],
                   ),
-                  Expanded(child: Text('Rumi Rajbhandari')),
-                ],
-              ),
-              BgItem(
-                margin: const EdgeInsets.only(top: 8),
-                padding: const EdgeInsets.all(8),
-                child: TextField(
-                  maxLines: 3,
-                  onChanged: (String value) {
-                    status = value;
-                  },
-                  decoration: InputDecoration.collapsed(
-                      hintText: Strings.whatsonYourMind, hintStyle: TextStyle(fontSize: 16)),
                 ),
-              ),
-              _getGridView(),
-              _getButtons()
-            ],
-          ),
-        ));
+                SliverToBoxAdapter(
+                  child: BgItem(
+                    margin: const EdgeInsets.only(top: 8, bottom: 8),
+                    padding: const EdgeInsets.all(8),
+                    child: TextField(
+                      maxLines: 3,
+                      onChanged: (String value) {
+                        status = value;
+                      },
+                      decoration: InputDecoration.collapsed(
+                          hintText: Strings.whatsonYourMind, hintStyle: TextStyle(fontSize: 16)),
+                    ),
+                  ),
+                ),
+                SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return _getSingleImageView(images[index]);
+                    }, childCount: images.length)),
+                SliverToBoxAdapter(child: _getButtons())
+              ],
+            )));
   }
 
-  Widget _getGridView() {
-    return (images == null || images.length < 1)
-        ? SizedBox.shrink()
-        : GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: 3,
-            children: List.generate(images.length, (index) {
-              Asset asset = images[index];
-              return AssetThumb(
-                asset: asset,
-                width: 300,
-                height: 300,
-                spinner: Container(),
-              );
-            }),
-          );
+  Widget _getSingleImageView(Asset asset) {
+    return AssetThumb(
+      asset: asset,
+      width: 300,
+      height: 300,
+      spinner: Container(),
+    );
   }
 
   Widget _getButtons() {
@@ -111,9 +108,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
             child: Text(Strings.post,
                 style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14)),
             onPressed: () {
-              if(status.isEmpty && images.length<1){
+              if (status.isEmpty && images.length < 1) {
                 Toast.show(Strings.pleaseAddStatusOrImagesBeforePosting, context);
-              }else{
+              } else {
                 var post = Post(id: 0, status: status, imageList: _getImageList());
                 widget.onAdd(post);
               }

@@ -1,4 +1,5 @@
 import 'package:my_facebook/data/model/home_remote_model.dart';
+import 'package:my_facebook/data/model/post.dart';
 import 'package:my_facebook/di/service_locator.dart';
 import 'package:my_facebook/remote/home_remote.dart';
 import 'package:my_facebook/repository/home_repository.dart';
@@ -9,5 +10,10 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<HomeRemoteModel> fetchHomeScreenData() {
     return _homeRemote.fetchHomeScreenData();
+  }
+
+  @override
+  Future<List<Post>> fetchMorePostData(int limit, int offset) {
+    return _homeRemote.fetchMorePostData(limit, offset);
   }
 }

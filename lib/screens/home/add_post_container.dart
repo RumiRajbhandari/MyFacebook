@@ -4,8 +4,6 @@ import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/add_post/add_post_screen.dart';
 import 'package:my_facebook/screens/home/bg_item.dart';
 import 'package:my_facebook/screens/home/profile_avatar.dart';
-import 'package:my_facebook/view_model/posts_view_model.dart';
-import 'package:provider/provider.dart';
 
 class AddPostContainer extends StatelessWidget {
   final void Function(Post post) onAdd;
@@ -14,40 +12,36 @@ class AddPostContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<PostViewModel>(
-        create: (context) => PostViewModel(),
-        builder: (context, _) {
-          return BgItem(
-            padding: EdgeInsets.all(12),
-            margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: Row(
-              children: [
-                ProfileAvatar(),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: GestureDetector(
-                    child: BgItem(
-                      margin: EdgeInsets.all(12),
-                      padding: EdgeInsets.all(8),
-                      child: Text(Strings.whatsonYourMind),
+    return BgItem(
+      padding: EdgeInsets.all(12),
+      margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
+      child: Row(
+        children: [
+          ProfileAvatar(),
+          const SizedBox(width: 8),
+          Expanded(
+            child: GestureDetector(
+              child: BgItem(
+                margin: EdgeInsets.all(12),
+                padding: EdgeInsets.all(8),
+                child: Text(Strings.whatsonYourMind),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddPostScreen(
+                      onAdd: (post) {
+                        onAdd(post);
+                      },
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddPostScreen(
-                            onAdd: (post) {
-                              onAdd(post);
-                            },
-                          ),
-                        ),
-                      );
-                    },
                   ),
-                )
-              ],
+                );
+              },
             ),
-          );
-        });
+          )
+        ],
+      ),
+    );
   }
 }

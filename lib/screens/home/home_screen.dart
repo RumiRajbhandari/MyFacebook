@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_facebook/data/model/post.dart';
+import 'package:my_facebook/di/service_locator.dart';
 import 'package:my_facebook/res/strings.dart';
 import 'package:my_facebook/screens/home/add_post_container.dart';
 import 'package:my_facebook/screens/home/post_container.dart';
@@ -15,7 +16,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PostViewModel viewModel = PostViewModel();
+  final PostViewModel viewModel = serviceLocator<PostViewModel>();
+
+  int offset = 0;
+  int limit = 25;
+  bool isMoreDataAvailable = true;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ErrorScreen(viewModel.postDataUseCase.exception);
                 break;
               case ResponseState.COMPLETE:
-                print('on complete');
                 return _getProfileList(context, viewModel.postDataUseCase.data);
                 break;
             }
@@ -49,12 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _getProfileList(BuildContext context, List<Post> posts) {
+    ScrollController _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+        if (isMoreDataAvailable) {
+          viewModel.fetchMoreData();
+          setState(() {});
+        }
+      }
+    });
+
     return CustomScrollView(
+      controller: _scrollController,
       slivers: [
         SliverToBoxAdapter(child: AddPostContainer(
           onAdd: (post) {
-            final model = Provider.of<PostViewModel>(context, listen: false);
-            final todo = model.addPost(post);
+            Provider.of<PostViewModel>(context, listen: false).addPost(post);
             return Navigator.pop(context);
           },
         )),
@@ -65,8 +79,27 @@ class _HomeScreenState extends State<HomeScreen> {
               post: post,
             );
           }, childCount: posts.length),
-        )
+        ),
+        SliverToBoxAdapter(child: _getLoadMoreContainer()),
       ],
     );
+  }
+
+  Widget _getLoadMoreContainer() {
+    return Consumer<PostViewModel>(builder: (context, viewModel, _) {
+      if (viewModel.isMoreDataAvailableUseCase.state == ResponseState.COMPLETE) {
+        isMoreDataAvailable = viewModel.isMoreDataAvailableUseCase.data;
+        if (isMoreDataAvailable == true) {
+          return Container(
+            height: 50.0,
+            color: Colors.transparent,
+            child: Center(
+              child: new CircularProgressIndicator(),
+            ),
+          );
+        }
+      }
+      return SizedBox.shrink();
+    });
   }
 }
